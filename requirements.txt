@@ -1,0 +1,48 @@
+# Requires Python 3.12 (NOT 3.13 — tokenizers has no prebuilt cp313 wheel yet
+# and fails to build from source on this system's GCC/Rust toolchain; see
+# ARCHITECTURE.md section 6).
+
+# Backend / API
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+pydantic==2.10.3
+pydantic-settings==2.7.0
+typer==0.15.1
+python-multipart==0.0.20  # required by FastAPI for UploadFile/Form (evidence upload)
+jinja2==3.1.6  # server-rendered web UI templates (app/web)
+
+# PDF / ingestion
+pdfplumber==0.11.4
+PyMuPDF==1.24.14
+charset-normalizer==3.5.1  # encoding auto-detection for evidence archives/text
+                           # (Windows console tools export cp1251/cp1125/utf-16,
+                           # not UTF-8 - see app/ingestion/encoding.py)
+
+# Embeddings / reranking / LLM
+ollama==0.6.2  # 0.4.4 lacks the `think` param needed to disable reasoning
+               # output on reasoning-capable local models, see app/llm/ollama_client.py
+FlagEmbedding==1.3.3
+torch==2.5.1
+
+# Vector DB
+qdrant-client==1.12.1
+fastembed==0.8.0  # sparse (Qdrant/bm25) vectors for hybrid search, see ARCHITECTURE.md section 1a
+
+# Requirement ID fuzzy lookup
+rapidfuzz==3.10.1
+
+# Relational storage
+sqlalchemy==2.0.36
+asyncpg==0.30.0
+alembic==1.14.0
+
+# Reports
+python-docx==1.1.2
+
+# Logging
+structlog==24.4.0
+
+# Tests
+pytest==8.3.4
+pytest-asyncio==0.25.0
+httpx==0.27.2

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Клиенты — PCI DSS Audit Assistant{% endblock %}
+{% block content %}
+  <div class="panel">
+    <h2>Клиенты</h2>
+    {% if clients %}
+      <table>
+        <tr><th>Название</th><th>Создан</th><th></th></tr>
+        {% for c in clients %}
+          <tr>
+            <td>{{ c.name }}</td>
+            <td>{{ c.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+            <td><a href="/ui/clients/{{ c.id }}">Проекты →</a></td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <div class="empty">Клиентов пока нет.</div>
+    {% endif %}
+  </div>
+
+  <div class="panel">
+    <h2>Новый клиент</h2>
+    <form method="post" action="/ui/clients">
+      <div class="row">
+        <div>
+          <label>Название</label>
+          <input type="text" name="name" required>
+        </div>
+        <div style="flex: 0;">
+          <button type="submit">Создать</button>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock %}

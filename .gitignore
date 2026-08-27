@@ -1,0 +1,21 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+data/processed/
+data/index/
+data/documents/**/*.pdf
+infra/.env
+.pytest_cache/
+
+# Never commit: this is a live GitHub API token (see README.md's history
+# note if you're reading this from git log - it was used once, locally,
+# to create this repository, and must never be pushed anywhere).
+git.in
+
+# Official PCI SSC copyrighted templates - same reasoning as the PDF
+# exclusion above (the Standard itself), not ours to redistribute.
+data/templates/roc_aoc/*.docx
+
+# Local Claude Code session state, not project source.
+.claude/

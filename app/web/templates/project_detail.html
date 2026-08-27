@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block title %}{{ project.name }} — PCI DSS Audit Assistant{% endblock %}
+{% block crumbs %}/ <a href="/ui/clients">Клиенты</a> / <a href="/ui/clients/{{ client.id }}">{{ client.name }}</a> / {{ project.name }}{% endblock %}
+{% block content %}
+  <div class="panel">
+    <h2>Вопрос в контексте проекта «{{ project.name }}» ({{ client.name }})</h2>
+    <form method="post" action="/ui/projects/{{ project.id }}/chat">
+      <textarea name="question" rows="2" placeholder="Например: соответствует ли парольная политика заказчика требованиям PCI DSS?" required>{{ question or "" }}</textarea>
+      <div style="margin-top: 10px;"><button type="submit">Спросить</button></div>
+    </form>
+    {% if answer %}
+      <div class="answer" style="margin-top: 16px;">{{ answer }}</div>
+    {% endif %}
+  </div>
+
+  <div class="panel">
+    <h2>Evidence</h2>
+    {% if evidence %}
+      <table>
+        <tr><th>Файл</th><th>Тип</th><th>Чанков</th><th>Requirement</th><th>Подсказка</th></tr>
+        {% for e in evidence %}
+          <tr>
+            <td>{{ e.filename }}</td>
+            <td>{{ e.evidence_type.value }}</td>
+            <td>{{ e.chunk_count }}</td>
+            <td>{{ e.requirement_id or "—" }}</td>
+            <td>{{ e.suggested_requirement_id or "—" }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <div class="empty">Evidence пока не загружено.</div>
+    {% endif %}
+    <form method="post" action="/ui/projects/{{ project.id }}/evidence" enctype="multipart/form-data" style="margin-top: 14px;">
+      <div class="row">
+        <div>
+          <label>Файл (.pdf, .docx, .txt, .json, .csv, .zip, .tar.gz)</label>
+          <input type="file" name="file" required>
+        </div>
+        <div>
+          <label>Тип evidence</label>
+          <select name="evidence_type">
+            <option value="interview_transcript">interview_transcript</option>
+            <option value="customer_document">customer_document</option>
+            <option value="config_export">config_export</option>
+            <option value="other">other</option>
+          </select>
+        </div>
+        <div style="flex: 0;">
+          <button type="submit">Загрузить</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="panel">
+    <h2>Findings</h2>
+    {% if findings %}
+      <table>
+        <tr><th>Requirement</th><th>Описание</th><th>Рекомендация</th><th>Статус</th></tr>
+        {% for f in findings %}
+          <tr>
+            <td>{{ f.requirement_id }}</td>
+            <td>{{ f.description }}</td>
+            <td>{{ f.recommendation or "—" }}</td>
+            <td>
+              <span class="badge {{ f.status.value }}">{{ f.status.value }}</span>
+              <form method="post" action="/ui/projects/{{ project.id }}/findings/{{ f.id }}/status" style="display: inline;">
+                <select name="status" onchange="this.form.submit()" style="width: auto; display: inline; font-size: 12px; padding: 2px 4px;">
+                  <option value="draft" {% if f.status.value == "draft" %}selected{% endif %}>draft</option>
+                  <option value="reviewed" {% if f.status.value == "reviewed" %}selected{% endif %}>reviewed</option>
+                  <option value="final" {% if f.status.value == "final" %}selected{% endif %}>final</option>
+                </select>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <div class="empty">Findings пока нет.</div>
+    {% endif %}
+    <form method="post" action="/ui/projects/{{ project.id }}/findings" style="margin-top: 14px;">
+      <div class="row">
+        <div style="flex: 0; min-width: 120px;">
+          <label>Requirement ID</label>
+          <input type="text" name="requirement_id" placeholder="8.3.6" required>
+        </div>
+        <div>
+          <label>Описание несоответствия</label>
+          <input type="text" name="description" required>
+        </div>
+        <div>
+          <label>Рекомендация</label>
+          <input type="text" name="recommendation">
+        </div>
+        <div style="flex: 0;">
+          <button type="submit">Добавить</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="panel">
+    <h2>Статусы требований</h2>
+    {% if requirement_statuses %}
+      <table>
+        <tr><th>Requirement</th><th>Статус</th><th>Заметки</th><th>Обновлён</th></tr>
+        {% for r in requirement_statuses %}
+          <tr>
+            <td>{{ r.requirement_id }}</td>
+            <td><span class="badge {{ r.status.value }}">{{ r.status.value }}</span></td>
+            <td>{{ r.notes or "—" }}</td>
+            <td>{{ r.updated_at.strftime("%Y-%m-%d %H:%M") }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <div class="empty">Статусы пока не проставлены.</div>
+    {% endif %}
+    <form method="post" action="/ui/projects/{{ project.id }}/requirements" style="margin-top: 14px;">
+      <div class="row">
+        <div style="flex: 0; min-width: 120px;">
+          <label>Requirement ID</label>
+          <input type="text" name="requirement_id" placeholder="8.3.6" required>
+        </div>
+        <div>
+          <label>Статус</label>
+          <select name="status">
+            <option value="in_progress">in_progress</option>
+            <option value="compliant">compliant</option>
+            <option value="non_compliant">non_compliant</option>
+            <option value="not_applicable">not_applicable</option>
+            <option value="compensating_control">compensating_control</option>
+          </select>
+        </div>
+        <div>
+          <label>Заметки</label>
+          <input type="text" name="notes">
+        </div>
+        <div style="flex: 0;">
+          <button type="submit">Сохранить</button>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock %}

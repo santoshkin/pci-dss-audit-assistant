@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}PCI DSS Audit Assistant{% endblock %}</title>
+  <style>
+    :root {
+      --border: #d8dde3;
+      --bg: #f7f8fa;
+      --panel: #ffffff;
+      --text: #1c2126;
+      --muted: #667080;
+      --accent: #2f5fda;
+      --accent-bg: #eef2ff;
+      --danger: #c0392b;
+      --ok: #1f7a3f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    header {
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+    header a { color: var(--text); text-decoration: none; font-weight: 600; }
+    header .crumbs { color: var(--muted); font-size: 14px; }
+    header .crumbs a { color: var(--accent); font-weight: 400; }
+    main {
+      max-width: 920px;
+      margin: 24px auto;
+      padding: 0 24px 64px;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .panel h2 { margin-top: 0; font-size: 16px; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    th { color: var(--muted); font-weight: 500; font-size: 12px; text-transform: uppercase; }
+    a.button, button {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 9px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    button:hover, a.button:hover { opacity: 0.9; }
+    input[type=text], textarea, select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+    label { display: block; font-size: 13px; color: var(--muted); margin: 10px 0 4px; }
+    form .row { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+    form .row > div { flex: 1; min-width: 160px; }
+    .empty { color: var(--muted); font-size: 14px; padding: 8px 0; }
+    .badge {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: var(--accent-bg);
+      color: var(--accent);
+    }
+    .badge.draft { background: #f1f3f5; color: var(--muted); }
+    .badge.reviewed { background: #fff4dd; color: #9a6300; }
+    .badge.final { background: #e6f6ec; color: var(--ok); }
+    .badge.compliant { background: #e6f6ec; color: var(--ok); }
+    .badge.non_compliant { background: #fdeceb; color: var(--danger); }
+    .answer {
+      white-space: pre-wrap;
+      background: var(--accent-bg);
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 14px;
+    }
+    .hint { color: var(--muted); font-size: 13px; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/ui/clients">PCI DSS Audit Assistant</a>
+    <span class="crumbs">{% block crumbs %}{% endblock %}</span>
+  </header>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

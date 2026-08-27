@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ client.name }} — PCI DSS Audit Assistant{% endblock %}
+{% block crumbs %}/ <a href="/ui/clients">Клиенты</a> / {{ client.name }}{% endblock %}
+{% block content %}
+  <div class="panel">
+    <h2>{{ client.name }}</h2>
+    <div class="hint">Qdrant-коллекция: {{ client.qdrant_collection_name }}</div>
+  </div>
+
+  <div class="panel">
+    <h2>Проекты</h2>
+    {% if projects %}
+      <table>
+        <tr><th>Название</th><th>Статус</th><th>Создан</th><th></th></tr>
+        {% for p in projects %}
+          <tr>
+            <td>{{ p.name }}</td>
+            <td><span class="badge">{{ p.status.value }}</span></td>
+            <td>{{ p.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+            <td><a href="/ui/projects/{{ p.id }}">Открыть →</a></td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <div class="empty">Проектов пока нет.</div>
+    {% endif %}
+  </div>
+
+  <div class="panel">
+    <h2>Новый проект</h2>
+    <form method="post" action="/ui/clients/{{ client.id }}/projects">
+      <div class="row">
+        <div>
+          <label>Название</label>
+          <input type="text" name="name" required>
+        </div>
+        <div style="flex: 0;">
+          <button type="submit">Создать</button>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock %}
